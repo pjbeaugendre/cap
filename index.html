@@ -80,8 +80,8 @@ ul.rules{padding-left:20px;margin:6px 0}ul.rules li{margin:6px 0}
 /* ---------- Configuration (figée pendant 14 jours) ---------- */
 const GOAL = "Ancrer mes routines et devenir plus fort mentalement";
 const ROUTINES = [
-  {id:"med", name:"Méditation", time:"07:10", min:"2 min, assis, juste respirer"},
-  {id:"str", name:"Stretching", time:"07:25", min:"3 min, dos et épaules"},
+  {id:"med", name:"Méditation", time:"07:10", sun:"08:10", min:"2 min, assis, juste respirer"},
+  {id:"str", name:"Stretching", time:"07:25", sun:"08:25", min:"3 min, dos et épaules"},
   {id:"gui", name:"Guitare",    time:"20:30", min:"5 min, un seul morceau"}
 ];
 const FREEZE_DAYS = 14;
@@ -206,7 +206,7 @@ function viewToday(){
     const e = E(t)[r.id];
     h += '<div class="routine'+(e?' done':'')+(openId===r.id?' open':'')+'">'
       +'<button class="chk" data-act="done" data-id="'+r.id+'" aria-label="Fait">'+(e?"✓":"")+'</button>'
-      +'<div class="rt" data-act="open" data-id="'+r.id+'"><strong>'+esc(r.name)+' <span>'+(openId===r.id?'▴':'▾')+'</span></strong><span>'+r.time+(e&&e.s==="min"?' · version minimale':' · minimum : '+esc(r.min))+'</span></div>'
+      +'<div class="rt" data-act="open" data-id="'+r.id+'"><strong>'+esc(r.name)+' <span>'+(openId===r.id?'▴':'▾')+'</span></strong><span>'+(pk(t).getDay()===0 && r.sun ? r.sun : r.time)+(e&&e.s==="min"?' · version minimale':' · minimum : '+esc(r.min))+'</span></div>'
       +(e ? '<button class="mini'+(e.hard?' on':'')+'" data-act="hard" data-id="'+r.id+'">💪 malgré l\'envie</button>'
           : '<button class="mini" data-act="min" data-id="'+r.id+'">Minimum</button>')
       +'</div>';
