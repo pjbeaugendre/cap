@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cap">
+<meta name="theme-color" content="#0f1115">
+<meta name="color-scheme" content="dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Cap</title>
+<style>
+:root{--bg:#0f1115;--card:#1a1d24;--line:#2a2e39;--tx:#eef0f4;--mut:#8f97a8;--acc:#7cc4a4;--warn:#e8b25c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:18px/1.45 -apple-system,system-ui,"Helvetica Neue",sans-serif}
+main{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 22px) 20px 120px}
+h1{font-size:26px;margin:0 0 2px}h1::first-letter{text-transform:uppercase}
+h2{font-size:15px;color:var(--mut);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:28px 0 10px}
+.sub{color:var(--mut);font-size:15px;margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:12px 0}
+.card.coach{border-color:var(--acc)}
+.card.warn{border-color:var(--warn)}
+.card b.t{display:block;color:var(--acc);font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.card.warn b.t{color:var(--warn)}
+input[type=text],textarea{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit}
+textarea{min-height:84px;resize:vertical}
+.routine{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:10px 0}
+.routine.done{border-color:var(--acc)}
+.chk{flex:none;width:52px;height:52px;border-radius:50%;border:2px solid var(--mut);background:none;color:var(--bg);font-size:26px;font-weight:700}
+.done .chk{background:var(--acc);border-color:var(--acc)}
+.rt{flex:1;min-width:0}
+.rt strong{display:block;font-size:19px}
+.rt span{color:var(--mut);font-size:14px}
+.mini{flex:none;border:1px solid var(--line);background:none;color:var(--mut);border-radius:10px;padding:8px 10px;font-size:14px}
+.mini.on{border-color:var(--acc);color:var(--acc)}
+.btn{display:block;width:100%;background:var(--acc);color:#0b0d10;border:0;border-radius:12px;padding:14px;font:600 17px inherit;margin-top:10px}
+.btn.ghost{background:none;color:var(--tx);border:1px solid var(--line)}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dot{width:18px;height:18px;border-radius:50%;background:var(--line)}
+.dot.f{background:var(--acc)}.dot.m{background:#4f8f78}.dot.x{background:none;border:1px dashed var(--line)}
+.wkr{display:grid;grid-template-columns:92px repeat(7,1fr);gap:6px;align-items:center;margin:6px 0}
+.wkh{text-align:center;color:var(--mut);font-size:14px;font-weight:600}.wkh.now{color:var(--acc)}
+.wkn{font-size:14px;color:var(--mut)}
+.cell{aspect-ratio:1;width:100%;border-radius:9px;border:1px solid var(--line);background:none;padding:0}
+.cell.f{background:var(--acc);border-color:var(--acc)}.cell.off{opacity:.25}
+.star{text-align:center;color:var(--warn);font-size:18px;min-height:22px}
+.routine.open{margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.rt{cursor:pointer}
+.det{background:var(--card);border:1px solid var(--line);border-top:0;border-radius:0 0 16px 16px;margin:0 0 10px;padding:6px 16px 14px}
+.exh{display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px}
+.ex{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:var(--tx);font:inherit;padding:11px 0}
+.ex.on{color:var(--mut);text-decoration:line-through}
+.bx{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--mut);display:inline-flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700}
+.ex.on .bx{background:var(--acc);border-color:var(--acc)}
+.timer{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:4px}
+.big{font-size:56px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums;margin:10px 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.chip{background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:9px 16px;font:inherit;font-size:16px}
+.chip.on{border-color:var(--acc);color:var(--acc)}
+.kpi{font-size:34px;font-weight:700;color:var(--acc)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(15,17,21,.96);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:0;color:var(--mut);padding:16px 4px;font:600 16px inherit}
+nav button.on{color:var(--acc)}
+ul.rules{padding-left:20px;margin:6px 0}ul.rules li{margin:6px 0}
+.small{font-size:14px;color:var(--mut)}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav>
+  <button data-tab="today">Aujourd'hui</button>
+  <button data-tab="goal">Objectif</button>
+  <button data-tab="review">Bilan</button>
+</nav>
+<script>
+"use strict";
+/* ---------- Configuration (figée pendant 14 jours) ---------- */
+const GOAL = "Ancrer mes routines et devenir plus fort mentalement";
+const ROUTINES = [
+  {id:"med", name:"Méditation", time:"07:10", min:"2 min, assis, juste respirer"},
+  {id:"str", name:"Stretching", time:"07:25", min:"3 min, dos et épaules"},
+  {id:"gui", name:"Guitare",    time:"20:30", min:"5 min, un seul morceau"}
+];
+const FREEZE_DAYS = 14;
+
+/* ---------- Utilitaires date ---------- */
+const pad = n => String(n).padStart(2,"0");
+const dkey = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const pk = k => { const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); };
+const add = (k,n) => { const d = pk(k); d.setDate(d.getDate()+n); return dkey(d); };
+const diff = (a,b) => Math.round((pk(b)-pk(a))/864e5);
+const weekKey = k => add(k, -((pk(k).getDay()+6)%7));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fr = (k,o) => pk(k).toLocaleDateString("fr-FR", o);
+
+/* ---------- Données ---------- */
+const KEY = "cap.v1";
+function load(){
+  try { const r = JSON.parse(localStorage.getItem(KEY)); if (r && r.v === 1) return r; } catch(e){}
+  return {v:1, start:dkey(new Date()), log:{}, prio:{}, rev:{}, j14:null};
+}
+let S = load();
+S.exo = S.exo || {};   // listes d'exos modifiables dans l'app
+S.exd = S.exd || {};   // exos cochés par jour
+
+/* Listes de départ : à remplacer par les tiennes (bouton « Modifier ») */
+const DEFAULT_EXOS = {
+  med: ["S'asseoir, dos droit, mains posées", "Respirer : inspirer 4 s, expirer 6 s", "À chaque distraction, revenir au souffle sans se juger"],
+  str: ["Nuque : inclinaisons latérales, 30 s", "Épaules : cercles lents, 30 s", "Dos : chat-vache, 1 min", "Arrière des cuisses : 45 s par jambe", "Torsion assise : 30 s par côté"],
+  gui: ["Échauffement des doigts, 2 min", "Un exercice technique, 5 min", "Un morceau en entier, du début à la fin"]
+};
+const exos = id => S.exo[id] || DEFAULT_EXOS[id] || [];
+
+/* ---------- Timer de méditation ---------- */
+const T = {id:null, dur:5, start:0, end:null, run:false, done:false, beepEvery:false, lastMin:0};
+const DURS = {med:[2,5,10,15,20], str:[3,5,10,15]};
+let tick = null, wake = null, audio = null;
+const fmt = ms => { const s = Math.ceil(ms/1000); return pad(Math.floor(s/60))+":"+pad(s%60); };
+function chime(){
+  if (!audio) return;
+  [0,1.2,2.4].forEach(dt => {
+    const o = audio.createOscillator(), g = audio.createGain(), t0 = audio.currentTime + dt;
+    o.frequency.value = 528; o.connect(g); g.connect(audio.destination);
+    g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(0.5,t0+0.05); g.gain.exponentialRampToValueAtTime(0.0001,t0+1.1);
+    o.start(t0); o.stop(t0+1.2);
+  });
+}
+function releaseWake(){ try { wake && wake.release(); } catch(e){} wake = null; }
+function beep(){
+  if (!audio) return;
+  const o = audio.createOscillator(), g = audio.createGain(), t0 = audio.currentTime;
+  o.frequency.value = 880; o.connect(g); g.connect(audio.destination);
+  g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(0.5,t0+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t0+0.3);
+  o.start(t0); o.stop(t0+0.35);
+}
+function updateTimer(){
+  if (!T.run) return;
+  const now = Date.now(), left = Math.max(0, T.end - now);
+  const el = document.getElementById("tleft"); if (el) el.textContent = fmt(left);
+  if (T.beepEvery){ const m = Math.floor((now - T.start)/60000); if (m > T.lastMin && left > 0){ T.lastMin = m; beep(); } }
+  if (left <= 0){ clearInterval(tick); T.run = false; T.done = true; releaseWake(); chime(); render(); }
+}
+function startTimer(id){
+  try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); } catch(e){}
+  try { navigator.wakeLock && navigator.wakeLock.request("screen").then(l => { wake = l; }).catch(() => {}); } catch(e){}
+  T.id = id; T.start = Date.now(); T.end = T.start + T.dur*60000; T.run = true; T.done = false;
+  T.beepEvery = id === "str"; T.lastMin = 0;
+  clearInterval(tick); tick = setInterval(updateTimer, 500);
+}
+function stopTimer(){ clearInterval(tick); T.run = false; T.done = false; T.end = null; T.id = null; releaseWake(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch(e){}
+save();
+
+const E = k => S.log[k] || {};
+const countDone = k => ROUTINES.filter(r => E(k)[r.id]).length;
+
+/* ---------- Coach (règles simples, pas d'IA à maintenir) ---------- */
+function coach(t){
+  const idx = diff(S.start,t)+1, done = countDone(t);
+  const hard = ROUTINES.filter(r => (E(t)[r.id]||{}).hard).length;
+  const y = add(t,-1);
+  const missed = y >= S.start ? ROUTINES.filter(r => !E(y)[r.id]) : [];
+  if (done === ROUTINES.length)
+    return ["Journée complète","Ce n'est pas l'intensité qui installe une habitude, c'est la répétition. À demain."];
+  if (missed.length && done === 0)
+    return ["Règle : jamais deux fois","Hier, il manquait : "+missed.map(r=>r.name).join(", ")+". Aujourd'hui, la version minimale suffit. L'important est de reprendre."];
+  if (hard)
+    return ["Bien joué","Tu l'as fait sans en avoir envie. C'est exactement ça, la force mentale."];
+  if (idx >= 9 && idx <= 14)
+    return ["Zone à risque","C'est ici que tes projets s'arrêtent d'habitude. Ne change rien, ne cherche pas un meilleur outil. Fais la version minimale."];
+  const next = ROUTINES.find(r => !E(t)[r.id]);
+  return ["Prochaine action", next.name+" : "+next.min+". Si tu hésites, commence par 2 minutes."];
+}
+
+/* ---------- Vues ---------- */
+let tab = "today", openId = null, editId = null;
+
+function viewToday(){
+  const t = dkey(new Date()), idx = diff(S.start,t)+1, j14 = add(S.start,FREEZE_DAYS);
+  const [ct,cm] = coach(t);
+  const standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
+  let h = '<h1>'+esc(fr(t,{weekday:"long",day:"numeric",month:"long"}))+'</h1>';
+  h += '<p class="sub">Jour '+idx+(t<j14?' · gel jusqu\'au '+esc(fr(j14,{day:"numeric",month:"long"})):'')+'</p>';
+  if (!standalone)
+    h += '<div class="card warn"><b class="t">Installation</b>Dans Safari : Partager → « Sur l\'écran d\'accueil », puis ouvre Cap depuis l\'icône.</div>';
+  h += '<div class="card coach"><b class="t">'+esc(ct)+'</b>'+esc(cm)+'</div>';
+  if (t >= j14 && !S.j14){
+    h += '<div class="card warn"><b class="t">Rendez-vous J+14</b>Cette app m\'a-t-elle fait faire des choses réelles ?'
+      +'<button class="btn" data-act="j14" data-v="continue">Oui, je continue</button>'
+      +'<button class="btn ghost" data-act="j14" data-v="simplify">Je simplifie</button>'
+      +'<button class="btn ghost" data-act="j14" data-v="stop">J\'arrête</button></div>';
+  } else if (S.j14){
+    h += '<p class="small">Décision J+14 : '+({continue:"je continue",simplify:"je simplifie",stop:"j'arrête"}[S.j14.a])+'.</p>';
+  }
+  if (pk(t).getDay() === 0 && !S.rev[weekKey(t)])
+    h += '<div class="card"><b class="t">Dimanche</b>Bilan de la semaine : 5 minutes, onglet Bilan.</div>';
+
+  h += '<h2>Priorité du jour</h2><input id="prio" type="text" placeholder="Une seule chose qui compte aujourd\'hui" value="'+esc(S.prio[t]||"")+'">';
+
+  h += '<h2>Routines</h2>';
+  for (const r of ROUTINES){
+    const e = E(t)[r.id];
+    h += '<div class="routine'+(e?' done':'')+(openId===r.id?' open':'')+'">'
+      +'<button class="chk" data-act="done" data-id="'+r.id+'" aria-label="Fait">'+(e?"✓":"")+'</button>'
+      +'<div class="rt" data-act="open" data-id="'+r.id+'"><strong>'+esc(r.name)+' <span>'+(openId===r.id?'▴':'▾')+'</span></strong><span>'+r.time+(e&&e.s==="min"?' · version minimale':' · minimum : '+esc(r.min))+'</span></div>'
+      +(e ? '<button class="mini'+(e.hard?' on':'')+'" data-act="hard" data-id="'+r.id+'">💪 malgré l\'envie</button>'
+          : '<button class="mini" data-act="min" data-id="'+r.id+'">Minimum</button>')
+      +'</div>';
+    if (openId === r.id) h += details(r,t);
+  }
+  h += '<p class="small">Aujourd\'hui : '+countDone(t)+'/'+ROUTINES.length+'</p>';
+  h += weekGrid(t);
+  return h;
+}
+
+function timerHtml(id){
+  const name = ROUTINES.find(r => r.id === id).name.toLowerCase(), mine = T.id === id;
+  let h = '<div class="timer">';
+  if (T.run && mine)
+    h += '<div class="big" id="tleft">'+fmt(Math.max(0,T.end-Date.now()))+'</div><button class="btn ghost" data-act="tstop" data-id="'+id+'">Arrêter</button>';
+  else if (T.done && mine)
+    h += '<div class="big">Terminé</div><button class="btn" data-act="tvalid" data-id="'+id+'">Valider le '+esc(name)+'</button><button class="btn ghost" data-act="tstop" data-id="'+id+'">Fermer</button>';
+  else if (T.run || T.done)
+    h += '<p class="small">Un autre timer est en cours.</p>';
+  else
+    h += '<div class="chips">'+DURS[id].map(m => '<button class="chip'+(T.dur===m?' on':'')+'" data-act="tdur" data-id="'+id+'" data-m="'+m+'">'+m+' min</button>').join("")+'</div>'
+      +'<div class="big">'+fmt(T.dur*60000)+'</div><button class="btn" data-act="tstart" data-id="'+id+'">Démarrer</button>'
+      +(id === "str" ? '<p class="small">Un bip chaque minute, trois sons à la fin.</p>' : '');
+  return h+'<p class="small">Si l\'écran s\'éteint, règle Verrouillage auto sur « Jamais » le temps de la séance.</p></div>';
+}
+
+function details(r,t){
+  const list = exos(r.id), editing = editId === r.id;
+  let h = '<div class="det">';
+  if (DURS[r.id]) h += timerHtml(r.id);
+  if (r.id === "str") return h+'</div>';   // stretching : timer seul, pas de liste d'exos
+  h += '<div class="exh"><b>Exos</b><button class="mini" data-act="edit" data-id="'+r.id+'">'+(editing?'OK':'Modifier')+'</button></div>';
+  if (editing)
+    h += '<textarea data-ex="'+r.id+'">'+esc(list.join("\n"))+'</textarea><p class="small">Un exercice par ligne.</p>';
+  else if (!list.length)
+    h += '<p class="small">Aucun exo pour l\'instant. Touche Modifier pour en ajouter.</p>';
+  else list.forEach((x,i) => {
+    const on = (S.exd[t]||{})[r.id+":"+i];
+    h += '<button class="ex'+(on?' on':'')+'" data-act="exo" data-id="'+r.id+'" data-i="'+i+'"><span class="bx">'+(on?"✓":"")+'</span>'+esc(x)+'</button>';
+  });
+  return h+'</div>';
+}
+
+function weekGrid(t){
+  const wk = weekKey(t), L = ["L","M","M","J","V","S","D"];
+  let h = '<h2>Cette semaine</h2><div class="card"><div class="wkr"><span></span>';
+  for (let i=0;i<7;i++) h += '<span class="wkh'+(add(wk,i)===t?' now':'')+'">'+L[i]+'</span>';
+  h += '</div>';
+  for (const r of ROUTINES){
+    h += '<div class="wkr"><span class="wkn">'+esc(r.name)+'</span>';
+    for (let i=0;i<7;i++){
+      const k = add(wk,i), e = E(k)[r.id], off = k > t || k < S.start;
+      h += '<button class="cell'+(e?' f':'')+(off?' off':'')+'"'
+        +(off ? ' disabled' : ' data-act="cell" data-id="'+r.id+'" data-d="'+k+'"')+' aria-label="'+esc(r.name+' '+k)+'"></button>';
+    }
+    h += '</div>';
+  }
+  h += '<div class="wkr"><span></span>';
+  for (let i=0;i<7;i++){
+    const k = add(wk,i);
+    h += '<span class="star">'+(k<=t && k>=S.start && countDone(k)===ROUTINES.length ? "★" : "")+'</span>';
+  }
+  return h+'</div></div><p class="small">Touche une case pour cocher ou décocher un jour passé. ★ = journée complète.</p>';
+}
+
+function dots(id,t){
+  let h = '<div class="dots">';
+  for (let i=6;i>=0;i--){
+    const k = add(t,-i), e = k >= S.start ? E(k)[id] : null;
+    h += '<span class="dot '+(k<S.start?'x':e?(e.s==="min"?'m':'f'):'')+'"></span>';
+  }
+  return h+'</div>';
+}
+
+function viewGoal(){
+  const t = dkey(new Date());
+  let hard = 0, tot = 0, poss = 0;
+  for (const k in S.log) for (const r of ROUTINES){ const e = S.log[k][r.id]; if (e){ tot++; if (e.hard) hard++; } }
+  for (let k=S.start; k<=t; k=add(k,1)) poss += ROUTINES.length;
+  let h = '<h1>Objectif</h1><p class="sub">'+esc(GOAL)+'</p>';
+  h += '<div class="card"><div class="kpi">'+hard+'</div>fois où je l\'ai fait <b>malgré l\'envie</b>. C\'est ça, ta force mentale en pratique.</div>';
+  h += '<div class="card"><div class="kpi">'+tot+' / '+poss+'</div>routines faites depuis le début</div>';
+  h += '<h2>7 derniers jours</h2>';
+  for (const r of ROUTINES) h += '<div class="card"><strong>'+esc(r.name)+'</strong>'+dots(r.id,t)+'</div>';
+  h += '<p class="small">Plein : fait · foncé : version minimale · vide : non fait. Pas de série à protéger : un jour manqué ne casse rien.</p>';
+  h += '<h2>Règles</h2><ul class="rules"><li><b>Jamais deux fois</b> : si je rate un jour, je reprends le lendemain.</li>'
+    +'<li><b>Version minimale</b> : mieux vaut 2 minutes que rien.</li>'
+    +'<li><b>Gel 14 jours</b> : je ne modifie ni l\'app ni les routines.</li>'
+    +'<li><b>Si… alors…</b> : chaque routine a son moment fixe.</li></ul>';
+  return h;
+}
+
+const QS = [
+  ["a","Qu'est-ce qui a fonctionné cette semaine ?"],
+  ["b","Qu'est-ce qui m'a fait sauter une routine ?"],
+  ["c","Si [situation précise], alors je [action] la semaine prochaine."]
+];
+function viewReview(){
+  const t = dkey(new Date()), wk = weekKey(t), cur = S.rev[wk] || {};
+  let h = '<h1>Bilan</h1><p class="sub">Semaine du '+esc(fr(wk,{day:"numeric",month:"long"}))+' · 5 minutes, pas plus.</p>';
+  for (const [k,q] of QS) h += '<h2>'+esc(q)+'</h2><textarea data-q="'+k+'">'+esc(cur[k]||"")+'</textarea>';
+  const past = Object.keys(S.rev).filter(k => k !== wk).sort().reverse().slice(0,3);
+  if (past.length){
+    h += '<h2>Semaines passées</h2>';
+    for (const k of past) h += '<div class="card"><span class="small">Semaine du '+esc(fr(k,{day:"numeric",month:"long"}))+'</span><br>'+esc(S.rev[k].c||S.rev[k].a||"")+'</div>';
+  }
+  return h;
+}
+
+/* ---------- Rendu et événements ---------- */
+const app = document.getElementById("app");
+function render(){
+  app.innerHTML = tab==="today" ? viewToday() : tab==="goal" ? viewGoal() : viewReview();
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+}
+
+document.addEventListener("click", ev => {
+  const nb = ev.target.closest("nav button");
+  if (nb){ tab = nb.dataset.tab; render(); window.scrollTo(0,0); return; }
+  const b = ev.target.closest("[data-act]"); if (!b) return;
+  const t = dkey(new Date()), id = b.dataset.id, d = b.dataset.d || t;
+  S.log[d] = S.log[d] || {};
+  const cur = S.log[d][id];
+  switch (b.dataset.act){
+    case "done": case "cell": if (cur) delete S.log[d][id]; else S.log[d][id] = {s:"done"}; break;
+    case "min":  S.log[d][id] = {s:"min"}; break;
+    case "hard": if (cur) cur.hard = !cur.hard; break;
+    case "j14":  S.j14 = {a:b.dataset.v, t}; break;
+    case "open": openId = openId === id ? null : id; editId = null;
+      if (!T.run && !T.done && DURS[id] && !DURS[id].includes(T.dur)) T.dur = DURS[id][1]; break;
+    case "edit": editId = editId === id ? null : id; break;
+    case "exo":  { S.exd[t] = S.exd[t] || {}; const k = id+":"+b.dataset.i; S.exd[t][k] = !S.exd[t][k]; break; }
+    case "tdur": if (!T.run) T.dur = Number(b.dataset.m); break;
+    case "tstart": startTimer(id); break;
+    case "tstop": stopTimer(); break;
+    case "tvalid": { const rid = T.id; if (rid && !S.log[t][rid]) S.log[t][rid] = {s:"done"}; stopTimer(); break; }
+  }
+  save(); render();
+});
+
+document.addEventListener("input", ev => {
+  const t = dkey(new Date());
+  if (ev.target.id === "prio"){ S.prio[t] = ev.target.value; save(); }
+  else if (ev.target.dataset.ex){
+    S.exo[ev.target.dataset.ex] = ev.target.value.split("\n").map(s => s.trim()).filter(Boolean); save();
+  }
+  else if (ev.target.dataset.q){
+    const wk = weekKey(t); S.rev[wk] = S.rev[wk] || {}; S.rev[wk][ev.target.dataset.q] = ev.target.value; save();
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden){ updateTimer(); if (!document.activeElement.matches("input,textarea")) render(); }
+});
+
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+render();
+</script>
+</body>
+</html>
